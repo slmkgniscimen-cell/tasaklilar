@@ -24,43 +24,50 @@
     .page { padding: 16px; display: none; }
     .page.active { display: block; }
     .score-btn { width: 36px; height: 36px; border-radius: 8px; border: none; cursor: pointer; background: #2a2a3a; color: #888; font-weight: 700; font-size: 14px; transition: all 0.15s; margin: 2px; }
+    .user-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #222; }
   </style>
 </head>
 <body>
 
+<!-- LOADING -->
 <div id="loadingScreen" style="display:flex;align-items:center;justify-content:center;min-height:100vh;flex-direction:column;gap:20px;">
   <div style="font-family:'Bangers',cursive;font-size:36px;letter-spacing:4px;background:linear-gradient(135deg,#FF4444,#FFD700);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">AĞIR TAŞAKLILAR</div>
   <div style="color:#888;">Yükleniyor...</div>
 </div>
 
-<div id="loginPage" style="display:none;align-items:center;justify-content:center;min-height:100vh;padding:20px;">
+<!-- LOGIN -->
+<div id="loginPage" style="display:none;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:20px;">
   <div style="width:100%;max-width:380px;">
     <div style="text-align:center;margin-bottom:24px;">
-      <img src="https://i.imgur.com/2nCt3Sbl.jpg" onerror="this.src='https://upload.wikimedia.org/wikipedia/en/f/fc/Fight_Club_poster.jpg'" style="width:110px;height:150px;object-fit:cover;border-radius:12px;border:3px solid #FF4444;box-shadow:0 0 30px #FF444466;filter:grayscale(20%);margin-bottom:12px;" />
+      <img id="tylerImg" src="https://upload.wikimedia.org/wikipedia/en/f/fc/Fight_Club_poster.jpg"
+        style="width:100px;height:140px;object-fit:cover;border-radius:12px;border:3px solid #FF4444;box-shadow:0 0 30px #FF444466;filter:grayscale(20%);margin-bottom:12px;" />
       <div id="sigmaQuote" style="font-style:italic;color:#aaa;font-size:12px;padding:0 10px;margin-bottom:14px;min-height:32px;"></div>
       <div style="font-family:'Bangers',cursive;font-size:42px;letter-spacing:4px;background:linear-gradient(135deg,#FF4444,#FFD700);-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1.1;">AĞIR TAŞAKLILAR</div>
       <div style="font-family:'Bangers',cursive;font-size:20px;letter-spacing:2px;color:#888;">KULÜBÜ 👑</div>
     </div>
     <div class="card">
       <label>Kullanıcı Adı</label>
-      <input id="loginUser" placeholder="adınızı girin" onkeydown="if(event.key==='Enter')handleLogin()" />
+      <input id="loginUser" placeholder="adınızı girin" />
       <label>Şifre</label>
-      <input id="loginPass" type="password" placeholder="••••••" onkeydown="if(event.key==='Enter')handleLogin()" />
-      <button class="btn" style="font-size:17px;padding:13px;" onclick="handleLogin()">GİRİŞ YAP 🚀</button>
+      <input id="loginPass" type="password" placeholder="••••••" />
+      <button class="btn" style="font-size:17px;padding:13px;" id="loginBtn">GİRİŞ YAP 🚀</button>
     </div>
     <div style="text-align:center;font-size:13px;color:#555;margin-top:12px;">admin / admin123 ile giriş yap</div>
   </div>
 </div>
 
+<!-- MAIN APP -->
 <div id="mainApp" style="display:none;">
   <div class="header">
     <div class="htitle">AĞIR TAŞAKLILAR 👑</div>
-    <button class="btn-gray" onclick="handleLogout()">Çıkış</button>
+    <button class="btn-gray" id="logoutBtn">Çıkış</button>
   </div>
 
-  <div id="pageHome" class="page active">
-    <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;background:#151520;border:1px solid #333;border-radius:16px;padding:14px;overflow:hidden;">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/Mike_Tyson_2019_by_Glenn_Francis.jpg/220px-Mike_Tyson_2019_by_Glenn_Francis.jpg" onerror="this.style.display='none'" style="width:60px;height:60px;object-fit:cover;border-radius:50%;border:2px solid #FF4444;filter:grayscale(20%);flex-shrink:0;" />
+  <!-- HOME -->
+  <div id="pageHome" class="page">
+    <div class="card" style="display:flex;align-items:center;gap:12px;padding:14px;">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/Mike_Tyson_2019_by_Glenn_Francis.jpg/220px-Mike_Tyson_2019_by_Glenn_Francis.jpg"
+        style="width:56px;height:56px;object-fit:cover;border-radius:50%;border:2px solid #FF4444;flex-shrink:0;" />
       <div id="tysonQuote" style="font-style:italic;color:#aaa;font-size:12px;line-height:1.5;"></div>
     </div>
     <div class="stitle">📊 BUGÜNKÜ PUANLAR</div>
@@ -68,16 +75,18 @@
     <div id="scoreList"></div>
   </div>
 
+  <!-- WHEEL -->
   <div id="pageWheel" class="page">
     <div class="stitle">🎡 GÜNÜN OÇ'U ÇARKI</div>
     <div id="wheelOCInfo"></div>
     <div class="card" style="display:flex;flex-direction:column;align-items:center;gap:16px;">
       <canvas id="wheelCanvas" width="300" height="300"></canvas>
-      <button id="spinBtn" class="btn" style="width:auto;padding:12px 32px;font-family:'Bangers',cursive;font-size:18px;letter-spacing:2px;" onclick="doSpin()">🎰 ÇEVİR!</button>
+      <button id="spinBtn" class="btn" style="width:auto;padding:12px 32px;font-family:'Bangers',cursive;font-size:18px;letter-spacing:2px;">🎰 ÇEVİR!</button>
     </div>
     <div id="wheelResult"></div>
   </div>
 
+  <!-- RATE -->
   <div id="pageRate" class="page">
     <div class="stitle">⭐ PUAN VER</div>
     <div class="card">
@@ -87,17 +96,18 @@
       </select>
     </div>
     <div id="rateList"></div>
-    <button class="btn" style="font-size:17px;padding:14px;" onclick="submitRatings()">PUANLARI KAYDET 🎯</button>
+    <button class="btn" id="submitRatingsBtn" style="font-size:17px;padding:14px;">PUANLARI KAYDET 🎯</button>
     <div class="stitle" style="margin-top:24px;">🏅 ROZET VER</div>
     <div class="card">
       <label>Kişi</label>
-      <select id="giveBadgeTo"></select>
+      <select id="giveBadgeTo"><option value="">-- Seç --</option></select>
       <label>Rozet</label>
-      <select id="giveBadgeId"></select>
-      <button class="btn-gold" onclick="giveBadge()">ROZET VER 🏅</button>
+      <select id="giveBadgeId"><option value="">-- Seç --</option></select>
+      <button class="btn-gold" id="giveBadgeBtn">ROZET VER 🏅</button>
     </div>
   </div>
 
+  <!-- BADGES -->
   <div id="pageBadges" class="page">
     <div class="stitle">🏅 ROZETLER</div>
     <div id="badgeList"></div>
@@ -109,15 +119,17 @@
       <input id="badgeName" placeholder="BEN ANLADIM ABİ" />
       <label>Anlamı / Açıklaması</label>
       <input id="badgeDesc" placeholder="Trip atan bir eşek 🫏" />
-      <button class="btn-gold" onclick="createBadge()">ROZET OLUŞTUR ✨</button>
+      <button class="btn-gold" id="createBadgeBtn">ROZET OLUŞTUR ✨</button>
     </div>
   </div>
 
+  <!-- HISTORY -->
   <div id="pageHistory" class="page">
     <div class="stitle">📜 GEÇMİŞ & ANILAR</div>
     <div id="historyList"></div>
   </div>
 
+  <!-- ADMIN -->
   <div id="pageAdmin" class="page">
     <div class="stitle">⚙️ ADMİN PANELİ</div>
     <div class="card" style="border:1px solid #FFD700;">
@@ -126,7 +138,7 @@
       <input id="regUser" placeholder="kullanıcıadı" />
       <label>Şifre</label>
       <input id="regPass" placeholder="şifre" />
-      <button class="btn-gold" onclick="handleRegister()">EKLE ✅</button>
+      <button class="btn-gold" id="registerBtn">EKLE ✅</button>
     </div>
     <div class="card">
       <div style="font-weight:800;margin-bottom:16px;font-size:18px;">🔑 Tüm Üyeler & Şifreler</div>
@@ -137,12 +149,14 @@
   <div class="nav" id="mainNav"></div>
 </div>
 
+<!-- TOAST -->
 <div id="toast" style="position:fixed;bottom:90px;left:50%;transform:translateX(-50%);color:#fff;padding:10px 20px;border-radius:12px;font-size:14px;font-weight:700;z-index:999;white-space:nowrap;box-shadow:0 4px 20px #000;display:none;"></div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import { getFirestore, doc, getDoc, setDoc, collection, getDocs, addDoc, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+import { getFirestore, doc, getDoc, setDoc, collection, getDocs, addDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
+// ===== FIREBASE =====
 const firebaseConfig = {
   apiKey: "AIzaSyDI7iOdq-b0u4H5kB79BNvwx3fUpQkbIVE",
   authDomain: "agir-tasaklilar.firebaseapp.com",
@@ -151,10 +165,10 @@ const firebaseConfig = {
   messagingSenderId: "231655685433",
   appId: "1:231655685433:web:c2e0db2d9cb57345f0fce8"
 };
-
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
+// ===== QUOTES =====
 const sigmaQuotes = [
   '"İlk kuralımız: kimseye anlatmazsın." — Tyler Durden',
   '"Sahip olduğun şeyler götünü ele geçirir." — Tyler Durden',
@@ -171,10 +185,10 @@ const tysonQuotes = [
   '"Zirveye ulaşmak kolay, orada kalmak zor." — Mike Tyson',
   '"Rakibin seni yıkmadan önce sen onu yık." — Mike Tyson',
 ];
-const sq = document.getElementById("sigmaQuote");
-if (sq) sq.textContent = sigmaQuotes[Math.floor(Math.random()*sigmaQuotes.length)];
+document.getElementById("sigmaQuote").textContent = sigmaQuotes[Math.floor(Math.random()*sigmaQuotes.length)];
 
-
+// ===== STATE =====
+const ADMIN = "admin";
 let currentUser = null, isAdmin = false;
 let users = {}, badges = [], dailyOC = null, history = [], ratings = {};
 let ratingValues = {}, commentValues = {};
@@ -189,13 +203,15 @@ const DEFAULT_BADGES = [
   { id:"b6", name:"TAHTEREVALLI", desc:"Bir iyi bir kötü, tutarsızlık şampiyonu 🎢", emoji:"🎢", createdBy:"admin" },
 ];
 
-// ===== DB HELPERS =====
+// ===== DB =====
 async function dbGet(path) {
-  const d = await getDoc(doc(db, ...path.split("/")));
+  const parts = path.split("/");
+  const d = await getDoc(doc(db, ...parts));
   return d.exists() ? d.data() : null;
 }
 async function dbSet(path, data) {
-  await setDoc(doc(db, ...path.split("/")), data, { merge: true });
+  const parts = path.split("/");
+  await setDoc(doc(db, ...parts), data, { merge: true });
 }
 async function dbGetCol(col) {
   const snap = await getDocs(collection(db, col));
@@ -205,47 +221,67 @@ async function dbAdd(col, data) {
   return await addDoc(collection(db, col), { ...data, timestamp: Date.now() });
 }
 
+// ===== TOAST =====
+function toast(msg, type) {
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.style.background = type === "error" ? "#cc2222" : "#226622";
+  t.style.display = "block";
+  setTimeout(function() { t.style.display = "none"; }, 3000);
+}
+
 // ===== INIT =====
 async function init() {
   try {
-    // Load or create admin
     let adminData = await dbGet("users/admin");
     if (!adminData) {
-      adminData = { password: "admin123", isAdmin: true, badges: [], totalScore: 0 };
-      await dbSet("users/admin", adminData);
+      await dbSet("users/admin", { password: "admin123", isAdmin: true, badges: [], totalScore: 0 });
     }
-    // Load users
     const userDocs = await dbGetCol("users");
     users = {};
-    userDocs.forEach(u => { const { id, ...rest } = u; users[id] = rest; });
-    // Load badges
+    userDocs.forEach(function(u) {
+      const id = u.id;
+      const rest = Object.assign({}, u);
+      delete rest.id;
+      if (!rest.deleted) users[id] = rest;
+    });
     const badgeDocs = await dbGetCol("badges");
-    if (badgeDocs.length === 0) {
-      for (const b of DEFAULT_BADGES) await dbSet(`badges/${b.id}`, b);
-      badges = [...DEFAULT_BADGES];
+    const activeBadges = badgeDocs.filter(function(b) { return !b.deleted; });
+    if (activeBadges.length === 0) {
+      for (let i = 0; i < DEFAULT_BADGES.length; i++) {
+        await dbSet("badges/" + DEFAULT_BADGES[i].id, DEFAULT_BADGES[i]);
+      }
+      badges = DEFAULT_BADGES.slice();
     } else {
-      badges = badgeDocs.map(({ id, ...rest }) => ({ id, ...rest }));
+      badges = activeBadges.map(function(b) {
+        const id = b.id;
+        const rest = Object.assign({}, b);
+        delete rest.id;
+        return Object.assign({ id: id }, rest);
+      });
     }
-    // Load dailyOC
     dailyOC = await dbGet("meta/dailyOC");
-    // Load ratings
     const ratingDocs = await dbGetCol("ratings");
     ratings = {};
-    ratingDocs.forEach(r => { const { id, ...rest } = r; ratings[id] = rest; });
-    // Load history
+    ratingDocs.forEach(function(r) {
+      const id = r.id;
+      const rest = Object.assign({}, r);
+      delete rest.id;
+      ratings[id] = rest;
+    });
     const histDocs = await dbGetCol("history");
-    history = histDocs.sort((a,b) => (b.timestamp||0)-(a.timestamp||0));
+    history = histDocs.sort(function(a, b) { return (b.timestamp||0) - (a.timestamp||0); });
 
     document.getElementById("loadingScreen").style.display = "none";
     document.getElementById("loginPage").style.display = "flex";
   } catch(e) {
     console.error(e);
-    document.getElementById("loadingScreen").innerHTML = '<div style="color:#FF4444;padding:20px;text-align:center;">Bağlantı hatası! Sayfayı yenile.</div>';
+    document.getElementById("loadingScreen").innerHTML = '<div style="color:#FF4444;padding:20px;text-align:center;">Bağlantı hatası! Sayfayı yenile.<br><small>' + e.message + '</small></div>';
   }
 }
 
 // ===== AUTH =====
-window.handleLogin = async function() {
+document.getElementById("loginBtn").addEventListener("click", async function() {
   const u = document.getElementById("loginUser").value.trim();
   const p = document.getElementById("loginPass").value;
   if (!u || !p) return toast("Kullanıcı adı ve şifre gir!", "error");
@@ -257,25 +293,20 @@ window.handleLogin = async function() {
   document.getElementById("mainApp").style.display = "block";
   buildNav();
   showPage("home");
-  toast(`Hoş geldin ${u}! 👊`);
-}
+  toast("Hoş geldin " + u + "! 👊");
+});
 
-window.handleLogout = function() {
+document.getElementById("loginPass").addEventListener("keydown", function(e) {
+  if (e.key === "Enter") document.getElementById("loginBtn").click();
+});
+
+document.getElementById("logoutBtn").addEventListener("click", function() {
   currentUser = null; isAdmin = false;
   document.getElementById("mainApp").style.display = "none";
   document.getElementById("loginPage").style.display = "flex";
   document.getElementById("loginUser").value = "";
   document.getElementById("loginPass").value = "";
-}
-
-// ===== TOAST =====
-function toast(msg, type="success") {
-  const t = document.getElementById("toast");
-  t.textContent = msg;
-  t.style.background = type === "error" ? "#cc2222" : "#226622";
-  t.style.display = "block";
-  setTimeout(() => t.style.display = "none", 3000);
-}
+});
 
 // ===== NAV =====
 function buildNav() {
@@ -285,100 +316,139 @@ function buildNav() {
     { id:"rate", label:"Puan Ver", icon:"⭐" },
     { id:"badges", label:"Rozetler", icon:"🏅" },
     { id:"history", label:"Geçmiş", icon:"📜" },
-    ...(isAdmin ? [{ id:"admin", label:"Admin", icon:"⚙️" }] : []),
   ];
-  document.getElementById("mainNav").innerHTML = pages.map(p =>
-    `<button class="nbtn" id="nav-${p.id}" onclick="showPage('${p.id}')"><span style="font-size:22px;">${p.icon}</span>${p.label}</button>`
-  ).join("");
+  if (isAdmin) pages.push({ id:"admin", label:"Admin", icon:"⚙️" });
+  document.getElementById("mainNav").innerHTML = pages.map(function(p) {
+    return '<button class="nbtn" id="nav-' + p.id + '" data-page="' + p.id + '"><span style="font-size:22px;">' + p.icon + '</span>' + p.label + '</button>';
+  }).join("");
+  document.querySelectorAll(".nbtn").forEach(function(btn) {
+    btn.addEventListener("click", function() { showPage(btn.dataset.page); });
+  });
 }
 
-window.showPage = function(id) {
-  document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
-  document.querySelectorAll(".nbtn").forEach(b => b.classList.remove("active"));
-  document.getElementById("page" + id.charAt(0).toUpperCase() + id.slice(1)).classList.add("active");
-  const nb = document.getElementById("nav-" + id);
-  if (nb) nb.classList.add("active");
+function showPage(id) {
+  document.querySelectorAll(".page").forEach(function(p) { p.classList.remove("active"); });
+  document.querySelectorAll(".nbtn").forEach(function(b) { b.classList.remove("active"); });
+  const pageEl = document.getElementById("page" + id.charAt(0).toUpperCase() + id.slice(1));
+  if (pageEl) pageEl.classList.add("active");
+  const navEl = document.getElementById("nav-" + id);
+  if (navEl) navEl.classList.add("active");
   if (id === "home") renderHome();
-  if (id === "wheel") renderWheel();
-  if (id === "rate") renderRate();
-  if (id === "badges") renderBadges();
-  if (id === "history") renderHistory();
-  if (id === "admin") renderAdmin();
+  else if (id === "wheel") renderWheel();
+  else if (id === "rate") renderRate();
+  else if (id === "badges") renderBadges();
+  else if (id === "history") renderHistory();
+  else if (id === "admin") renderAdmin();
 }
 
 // ===== HOME =====
 function renderHome() {
   const tq = document.getElementById("tysonQuote");
   if (tq) tq.textContent = tysonQuotes[Math.floor(Math.random()*tysonQuotes.length)];
+
   const today = new Date().toDateString();
-  // OC Card
   let ocHtml = "";
   if (dailyOC && dailyOC.date === today) {
-    ocHtml = `<div class="card" style="border:2px solid #FF4444;text-align:center;margin-bottom:16px;">
-      <div style="font-size:13px;color:#aaa;">🎡 Günün OÇ'u</div>
-      <div style="font-family:'Bangers',cursive;font-size:32px;color:#FF4444;letter-spacing:2px;">${dailyOC.username} 💀</div>
-      <div style="font-size:12px;color:#666;">${dailyOC.date}</div>
-    </div>`;
+    ocHtml = '<div class="card" style="border:2px solid #FF4444;text-align:center;margin-bottom:16px;">' +
+      '<div style="font-size:13px;color:#aaa;">🎡 Günün OÇ\'u</div>' +
+      '<div style="font-family:\'Bangers\',cursive;font-size:32px;color:#FF4444;letter-spacing:2px;">' + dailyOC.username + ' 💀</div>' +
+      '<div style="font-size:12px;color:#666;">' + dailyOC.date + '</div></div>';
   }
   document.getElementById("dailyOCCard").innerHTML = ocHtml;
 
-  // Scores
-  const members = Object.keys(users).filter(u => u !== ADMIN);
-  const scores = members.map(m => {
-    const key = `${today}_${m}`;
-    const dayR = ratings[key] ? ratings[key].votes || [] : [];
-    const avg = dayR.length > 0 ? (dayR.reduce((s,r) => s+r.score, 0) / dayR.length).toFixed(1) : "-";
-    return { username: m, avg, count: dayR.length, total: users[m]?.totalScore || 0, badges: users[m]?.badges || [] };
-  }).sort((a,b) => parseFloat(b.avg||0) - parseFloat(a.avg||0));
+  const members = Object.keys(users).filter(function(u) { return u !== ADMIN; });
+  const scores = members.map(function(m) {
+    const key = today + "_" + m;
+    const dayR = (ratings[key] && ratings[key].votes) ? ratings[key].votes : [];
+    const avg = dayR.length > 0 ? (dayR.reduce(function(s,r) { return s+r.score; }, 0) / dayR.length).toFixed(1) : "-";
+    return { username: m, avg: avg, count: dayR.length, total: users[m] ? (users[m].totalScore||0) : 0, badges: users[m] ? (users[m].badges||[]) : [] };
+  }).sort(function(a,b) { return parseFloat(b.avg||0) - parseFloat(a.avg||0); });
 
-  const colors = ["#FFD700","#aaa","#cd7f32"];
-  document.getElementById("scoreList").innerHTML = scores.map((m,i) => {
-    const myBadges = m.badges.slice(-3).map(bid => {
-      const b = badges.find(x => x.id === bid.badgeId);
-      return b ? `<span class="badge-tag">${b.emoji} ${b.name}</span>` : "";
+  const rankColors = ["#FFD700","#aaa","#cd7f32"];
+  document.getElementById("scoreList").innerHTML = scores.map(function(m, i) {
+    const myBadges = m.badges.slice(-3).map(function(bid) {
+      const b = badges.find(function(x) { return x.id === bid.badgeId; });
+      return b ? '<span class="badge-tag">' + b.emoji + ' ' + b.name + '</span>' : "";
     }).join("");
-    const avgColor = parseFloat(m.avg)>=7?"#44BB44":parseFloat(m.avg)>=4?"#FFD700":"#FF4444";
+    const avgColor = parseFloat(m.avg)>=7 ? "#44BB44" : parseFloat(m.avg)>=4 ? "#FFD700" : "#FF4444";
     const isMe = m.username === currentUser;
-    return `<div class="card" style="display:flex;align-items:center;gap:12px;padding:14px 16px;${isMe?"border:1px solid #FF4444;cursor:pointer;":""}" ${isMe?'onclick="showMyComments()"':""}>
-      <div style="font-family:'Bangers',cursive;font-size:28px;color:${colors[i]||'#555'};min-width:32px;">${i+1}</div>
-      <div style="flex:1;">
-        <div style="font-weight:800;font-size:16px;">${m.username} ${isMe?"<span style='font-size:11px;color:#FF4444;'>(sen)</span>":""}</div>
-        <div style="font-size:12px;color:#888;">Toplam: ${m.total} puan</div>
-        ${myBadges ? `<div style="margin-top:4px;">${myBadges}</div>` : ""}
-        ${isMe ? `<div style="font-size:11px;color:#FF4444;margin-top:4px;">👆 Yorumlarını gör</div>` : ""}
-      </div>
-      <div style="text-align:center;">
-        <div style="font-family:'Bangers',cursive;font-size:28px;color:${avgColor};">${m.avg}</div>
-        <div style="font-size:11px;color:#666;">${m.count} oy</div>
-      </div>
-    </div>`;
-  }).join("") || `<div class="card" style="color:#666;text-align:center;">Henüz üye yok. Admin panelinden ekle!</div>`;
+    const meStyle = isMe ? "border:1px solid #FF4444;cursor:pointer;" : "";
+    const meClick = isMe ? ' data-showcomments="1"' : "";
+    return '<div class="card" style="display:flex;align-items:center;gap:12px;padding:14px 16px;' + meStyle + '"' + meClick + '>' +
+      '<div style="font-family:\'Bangers\',cursive;font-size:28px;color:' + (rankColors[i]||"#555") + ';min-width:32px;">' + (i+1) + '</div>' +
+      '<div style="flex:1;">' +
+        '<div style="font-weight:800;font-size:16px;">' + m.username + (isMe ? ' <span style="font-size:11px;color:#FF4444;">(sen)</span>' : "") + '</div>' +
+        '<div style="font-size:12px;color:#888;">Toplam: ' + m.total + ' puan</div>' +
+        (myBadges ? '<div style="margin-top:4px;">' + myBadges + '</div>' : "") +
+        (isMe ? '<div style="font-size:11px;color:#FF4444;margin-top:4px;">👆 Yorumlarını gör</div>' : "") +
+      '</div>' +
+      '<div style="text-align:center;">' +
+        '<div style="font-family:\'Bangers\',cursive;font-size:28px;color:' + avgColor + ';">' + m.avg + '</div>' +
+        '<div style="font-size:11px;color:#666;">' + m.count + ' oy</div>' +
+      '</div></div>';
+  }).join("") || '<div class="card" style="color:#666;text-align:center;">Henüz üye yok. Admin panelinden ekle!</div>';
+
+  document.querySelectorAll("[data-showcomments]").forEach(function(el) {
+    el.addEventListener("click", showMyComments);
+  });
+}
+
+function showMyComments() {
+  const today = new Date().toDateString();
+  const key = today + "_" + currentUser;
+  const votes = (ratings[key] && ratings[key].votes) ? ratings[key].votes : [];
+  const commentsOnly = votes.filter(function(v) { return v.comment; });
+
+  const overlay = document.createElement("div");
+  overlay.style.cssText = "position:fixed;top:0;left:0;right:0;bottom:0;background:#000000cc;z-index:500;display:flex;align-items:center;justify-content:center;padding:20px;";
+  overlay.addEventListener("click", function() { overlay.remove(); });
+
+  let inner = '<div style="background:#151520;border:1px solid #FF4444;border-radius:16px;padding:20px;width:100%;max-width:360px;max-height:80vh;overflow-y:auto;" id="innerModal">' +
+    '<div style="font-family:\'Bangers\',cursive;font-size:24px;color:#FF4444;margin-bottom:8px;">💬 Bugün sana yazılanlar</div>' +
+    '<div style="font-size:12px;color:#666;margin-bottom:16px;">Kim yazdığı gizli 🤫</div>';
+
+  if (commentsOnly.length === 0) {
+    inner += '<div style="color:#666;text-align:center;padding:20px;">Bugün hiç yorum yok!</div>';
+  } else {
+    commentsOnly.forEach(function(v) {
+      const sc = v.score>=7 ? "#44BB44" : v.score>=4 ? "#FFD700" : "#FF4444";
+      inner += '<div style="background:#1e1e2e;border-radius:10px;padding:12px;margin-bottom:10px;">' +
+        '<div style="font-size:12px;color:#666;margin-bottom:4px;">' + (v.game||"Genel") + ' — <span style="color:' + sc + ';font-weight:700;">' + v.score + '/10</span></div>' +
+        '<div style="color:#f0f0f0;">"' + v.comment + '"</div></div>';
+    });
+  }
+  inner += '<button class="btn" id="closeModal" style="margin-top:8px;">Kapat</button></div>';
+  overlay.innerHTML = inner;
+  document.body.appendChild(overlay);
+  document.getElementById("innerModal").addEventListener("click", function(e) { e.stopPropagation(); });
+  document.getElementById("closeModal").addEventListener("click", function() { overlay.remove(); });
 }
 
 // ===== WHEEL =====
-const COLORS = ["#FF4444","#FF8800","#FFD700","#44BB44","#4488FF","#AA44FF","#FF44AA","#00CCCC"];
+const WCOLORS = ["#FF4444","#FF8800","#FFD700","#44BB44","#4488FF","#AA44FF","#FF44AA","#00CCCC"];
+
 function drawWheel(rot) {
   const canvas = document.getElementById("wheelCanvas");
   if (!canvas) return;
   const ctx = canvas.getContext("2d");
-  const members = Object.keys(users).filter(u => u !== ADMIN);
+  const members = Object.keys(users).filter(function(u) { return u !== ADMIN; });
   const cx = 150, cy = 150, r = 140;
   ctx.clearRect(0,0,300,300);
   if (members.length < 2) {
-    ctx.fillStyle = "#333"; ctx.fillRect(0,0,300,300);
-    ctx.fillStyle = "#888"; ctx.font = "16px Nunito"; ctx.textAlign = "center";
-    ctx.fillText("Üye ekle!", cx, cy);
+    ctx.fillStyle = "#1e1e2e"; ctx.fillRect(0,0,300,300);
+    ctx.fillStyle = "#888"; ctx.font = "16px Nunito,sans-serif"; ctx.textAlign = "center";
+    ctx.fillText("En az 2 üye gerekli!", cx, cy);
     return;
   }
   const slice = (2*Math.PI) / members.length;
-  members.forEach((m,i) => {
+  members.forEach(function(m, i) {
     const start = rot + i*slice, end = start + slice;
     ctx.beginPath(); ctx.moveTo(cx,cy); ctx.arc(cx,cy,r,start,end);
-    ctx.fillStyle = COLORS[i%COLORS.length]; ctx.fill();
+    ctx.fillStyle = WCOLORS[i%WCOLORS.length]; ctx.fill();
     ctx.strokeStyle = "#111"; ctx.lineWidth = 2; ctx.stroke();
     ctx.save(); ctx.translate(cx,cy); ctx.rotate(start+slice/2);
     ctx.textAlign = "right"; ctx.fillStyle = "#fff";
-    ctx.font = "bold 14px Bangers, cursive";
+    ctx.font = "bold 14px Bangers,cursive";
     ctx.shadowColor = "#000"; ctx.shadowBlur = 4;
     ctx.fillText(m, r-12, 5); ctx.restore();
   });
@@ -396,256 +466,252 @@ function renderWheel() {
   const today = new Date().toDateString();
   let info = "";
   if (dailyOC && dailyOC.date === today) {
-    info = `<div class="card" style="border:1px solid #FF4444;text-align:center;margin-bottom:16px;">
-      <div style="font-size:13px;color:#aaa;">Bugünün OÇ'u zaten seçildi:</div>
-      <div style="font-family:'Bangers',cursive;font-size:28px;color:#FF4444;">${dailyOC.username} 💀</div>
-    </div>`;
+    info = '<div class="card" style="border:1px solid #FF4444;text-align:center;margin-bottom:16px;">' +
+      '<div style="font-size:13px;color:#aaa;">Bugünün OÇ\'u zaten seçildi:</div>' +
+      '<div style="font-family:\'Bangers\',cursive;font-size:28px;color:#FF4444;">' + dailyOC.username + ' 💀</div></div>';
   }
   document.getElementById("wheelOCInfo").innerHTML = info;
 }
 
-window.doSpin = async function() {
+document.getElementById("spinBtn").addEventListener("click", async function() {
   if (spinning) return;
-  const members = Object.keys(users).filter(u => u !== ADMIN);
+  const members = Object.keys(users).filter(function(u) { return u !== ADMIN; });
   if (members.length < 2) return toast("En az 2 üye gerekli!", "error");
   spinning = true;
-  document.getElementById("spinBtn").disabled = true;
-  document.getElementById("spinBtn").textContent = "DÖNÜYOR...";
+  const spinBtn = document.getElementById("spinBtn");
+  spinBtn.disabled = true;
+  spinBtn.textContent = "DÖNÜYOR...";
 
-  const totalRot = (5 + Math.random()*5)*2*Math.PI + Math.random()*2*Math.PI;
-  const duration = 4000, start = performance.now(), startRot = wheelRot;
+  const totalRot = (5+Math.random()*5)*2*Math.PI + Math.random()*2*Math.PI;
+  const duration = 4000, startTime = performance.now(), startRot = wheelRot;
 
   function animate(now) {
-    const elapsed = now - start, progress = Math.min(elapsed/duration, 1);
+    const elapsed = now - startTime, progress = Math.min(elapsed/duration, 1);
     const ease = 1 - Math.pow(1-progress, 4);
     wheelRot = startRot + totalRot*ease;
     drawWheel(wheelRot);
     if (progress < 1) { requestAnimationFrame(animate); return; }
 
     spinning = false;
-    document.getElementById("spinBtn").disabled = false;
-    document.getElementById("spinBtn").textContent = "🎰 ÇEVİR!";
+    spinBtn.disabled = false;
+    spinBtn.textContent = "🎰 ÇEVİR!";
 
     const finalRot = wheelRot % (2*Math.PI);
     const slice = (2*Math.PI)/members.length;
     const norm = (2*Math.PI - finalRot%(2*Math.PI))%(2*Math.PI);
     const idx = Math.floor(norm/slice) % members.length;
     const winner = members[idx];
-
     const today = new Date().toDateString();
     dailyOC = { username: winner, date: today };
     dbSet("meta/dailyOC", dailyOC);
-    dbAdd("history", { type:"oc", winner, date: today });
-    history.unshift({ type:"oc", winner, date: today, timestamp: Date.now() });
-
-    document.getElementById("wheelResult").innerHTML = `
-      <div class="card" style="border:2px solid #FFD700;text-align:center;margin-top:16px;">
-        <div style="font-family:'Bangers',cursive;font-size:36px;color:#FFD700;">💀 ${winner} 💀</div>
-        <div style="color:#aaa;">Günün OÇ'u seçildi!</div>
-      </div>`;
-    toast(`🎉 Günün OÇ'u: ${winner}!`);
+    dbAdd("history", { type:"oc", winner: winner, date: today });
+    history.unshift({ type:"oc", winner: winner, date: today, timestamp: Date.now() });
+    document.getElementById("wheelResult").innerHTML =
+      '<div class="card" style="border:2px solid #FFD700;text-align:center;margin-top:16px;">' +
+      '<div style="font-family:\'Bangers\',cursive;font-size:36px;color:#FFD700;">💀 ' + winner + ' 💀</div>' +
+      '<div style="color:#aaa;">Günün OÇ\'u seçildi!</div></div>';
+    toast("🎉 Günün OÇ'u: " + winner + "!");
     renderWheel();
   }
   requestAnimationFrame(animate);
-}
+});
 
 // ===== RATE =====
 function renderRate() {
-  const members = Object.keys(users).filter(u => u !== ADMIN && u !== currentUser);
+  const members = Object.keys(users).filter(function(u) { return u !== ADMIN && u !== currentUser; });
   ratingValues = {}; commentValues = {};
-  document.getElementById("rateList").innerHTML = members.map(m => `
-    <div class="card">
-      <div style="font-weight:800;font-size:17px;margin-bottom:12px;">${m}</div>
-      <div style="display:flex;flex-wrap:wrap;margin-bottom:10px;">
-        ${[1,2,3,4,5,6,7,8,9,10].map(n =>
-          `<button class="score-btn" id="sb_${m}_${n}" onclick="setScore('${m}',${n})">${n}</button>`
-        ).join("")}
-      </div>
-      <input placeholder="Yorum (isteğe bağlı, anonim)" onchange="commentValues['${m}']=this.value" style="margin-bottom:0;" />
-    </div>`).join("") || `<div class="card" style="color:#666;text-align:center;">Puanlayacak üye yok!</div>`;
 
-  // Badge selects
+  document.getElementById("rateList").innerHTML = members.map(function(m) {
+    const btns = [1,2,3,4,5,6,7,8,9,10].map(function(n) {
+      return '<button class="score-btn" id="sb_' + m + '_' + n + '" data-member="' + m + '" data-score="' + n + '">' + n + '</button>';
+    }).join("");
+    return '<div class="card">' +
+      '<div style="font-weight:800;font-size:17px;margin-bottom:12px;">' + m + '</div>' +
+      '<div style="display:flex;flex-wrap:wrap;margin-bottom:10px;">' + btns + '</div>' +
+      '<input class="commentInput" data-member="' + m + '" placeholder="Yorum (isteğe bağlı, anonim)" style="margin-bottom:0;" /></div>';
+  }).join("") || '<div class="card" style="color:#666;text-align:center;">Puanlayacak üye yok!</div>';
+
+  document.querySelectorAll(".score-btn").forEach(function(btn) {
+    btn.addEventListener("click", function() {
+      const member = btn.dataset.member;
+      const n = parseInt(btn.dataset.score);
+      ratingValues[member] = n;
+      for (let i = 1; i <= 10; i++) {
+        const b = document.getElementById("sb_" + member + "_" + i);
+        if (!b) continue;
+        if (i === n) {
+          b.style.background = n>=7 ? "#44BB44" : n>=4 ? "#FFD700" : "#FF4444";
+          b.style.color = (n>=4&&n<7) ? "#111" : "#fff";
+        } else {
+          b.style.background = "#2a2a3a";
+          b.style.color = "#888";
+        }
+      }
+    });
+  });
+
+  document.querySelectorAll(".commentInput").forEach(function(inp) {
+    inp.addEventListener("input", function() {
+      commentValues[inp.dataset.member] = inp.value;
+    });
+  });
+
   const toSel = document.getElementById("giveBadgeTo");
   const bSel = document.getElementById("giveBadgeId");
-  toSel.innerHTML = `<option value="">-- Seç --</option>` + members.map(m => `<option>${m}</option>`).join("");
-  bSel.innerHTML = `<option value="">-- Seç --</option>` + badges.map(b => `<option value="${b.id}">${b.emoji} ${b.name}</option>`).join("");
+  toSel.innerHTML = '<option value="">-- Seç --</option>' + members.map(function(m) { return '<option>' + m + '</option>'; }).join("");
+  bSel.innerHTML = '<option value="">-- Seç --</option>' + badges.map(function(b) { return '<option value="' + b.id + '">' + b.emoji + ' ' + b.name + '</option>'; }).join("");
 }
 
-window.setScore = function(member, n) {
-  ratingValues[member] = n;
-  [1,2,3,4,5,6,7,8,9,10].forEach(i => {
-    const btn = document.getElementById(`sb_${member}_${i}`);
-    if (!btn) return;
-    btn.style.background = i===n ? (n>=7?"#44BB44":n>=4?"#FFD700":"#FF4444") : "#2a2a3a";
-    btn.style.color = i===n ? (n>=4&&n<7?"#111":"#fff") : "#888";
-  });
-}
-
-window.submitRatings = async function() {
-  const members = Object.keys(users).filter(u => u !== ADMIN && u !== currentUser);
-  if (members.some(m => !ratingValues[m])) return toast("Herkese puan ver!", "error");
+document.getElementById("submitRatingsBtn").addEventListener("click", async function() {
+  const members = Object.keys(users).filter(function(u) { return u !== ADMIN && u !== currentUser; });
+  if (members.some(function(m) { return !ratingValues[m]; })) return toast("Herkese puan ver!", "error");
   const today = new Date().toDateString();
   const game = document.getElementById("gameMode").value;
-
-  for (const m of members) {
+  for (let i = 0; i < members.length; i++) {
+    const m = members[i];
     const score = ratingValues[m];
-    const key = `${today}_${m}`;
+    const key = today + "_" + m;
     if (!ratings[key]) ratings[key] = { votes: [] };
     if (!ratings[key].votes) ratings[key].votes = [];
-    ratings[key].votes.push({ from: currentUser, score, game, comment: commentValues[m]||"" });
-    await dbSet(`ratings/${key}`, ratings[key]);
+    ratings[key].votes.push({ from: currentUser, score: score, game: game, comment: commentValues[m]||"" });
+    await dbSet("ratings/" + key, ratings[key]);
+    if (!users[m]) users[m] = { totalScore: 0 };
     users[m].totalScore = (users[m].totalScore||0) + score;
-    await dbSet(`users/${m}`, { totalScore: users[m].totalScore });
+    await dbSet("users/" + m, { totalScore: users[m].totalScore });
   }
-
-  const histEntry = { type:"rating", from: currentUser, date: today, game, scores: Object.fromEntries(members.map(m=>[m,ratingValues[m]])), comments: Object.fromEntries(members.map(m=>[m,commentValues[m]||""])) };
-  await dbAdd("history", histEntry);
-  history.unshift({ ...histEntry, timestamp: Date.now() });
-
+  const scores = {};
+  const comments = {};
+  members.forEach(function(m) { scores[m] = ratingValues[m]; comments[m] = commentValues[m]||""; });
+  const entry = { type:"rating", from: currentUser, date: today, game: game, scores: scores, comments: comments };
+  await dbAdd("history", entry);
+  history.unshift(Object.assign({ timestamp: Date.now() }, entry));
   toast("Puanlar kaydedildi! 🎯");
   renderRate();
-}
+});
 
-window.showMyComments = function() {
-  const today = new Date().toDateString();
-  const key = `${today}_${currentUser}`;
-  const votes = ratings[key]?.votes || [];
-  const commentsOnly = votes.filter(v => v.comment);
-  
-  let html = `<div style="position:fixed;top:0;left:0;right:0;bottom:0;background:#000000cc;z-index:500;display:flex;align-items:center;justify-content:center;padding:20px;" onclick="this.remove()">
-    <div style="background:#151520;border:1px solid #FF4444;border-radius:16px;padding:20px;width:100%;max-width:360px;max-height:80vh;overflow-y:auto;" onclick="event.stopPropagation()">
-      <div style="font-family:'Bangers',cursive;font-size:24px;color:#FF4444;margin-bottom:16px;">💬 Bugün sana yazılanlar</div>
-      <div style="font-size:12px;color:#666;margin-bottom:16px;">Kim yazdığı gizli 🤫</div>`;
-  
-  if (commentsOnly.length === 0) {
-    html += `<div style="color:#666;text-align:center;padding:20px;">Bugün hiç yorum yok!</div>`;
-  } else {
-    commentsOnly.forEach(v => {
-      const scoreColor = v.score>=7?"#44BB44":v.score>=4?"#FFD700":"#FF4444";
-      html += `<div style="background:#1e1e2e;border-radius:10px;padding:12px;margin-bottom:10px;">
-        <div style="font-size:12px;color:#666;margin-bottom:4px;">${v.game||"Genel"} — <span style="color:${scoreColor};font-weight:700;">${v.score}/10</span></div>
-        <div style="color:#f0f0f0;">"${v.comment}"</div>
-      </div>`;
-    });
-  }
-  
-  html += `<button class="btn" style="margin-top:8px;" onclick="this.closest('div[style*=fixed]').remove()">Kapat</button></div></div>`;
-  document.body.insertAdjacentHTML("beforeend", html);
-}
-
-window.giveBadge = async function() {
+document.getElementById("giveBadgeBtn").addEventListener("click", async function() {
+  const to = document.getElementById("giveBadgeTo").value;
   const bid = document.getElementById("giveBadgeId").value;
   if (!to || !bid) return toast("Kişi ve rozet seç!", "error");
-  const badge = badges.find(b => b.id === bid);
+  const badge = badges.find(function(b) { return b.id === bid; });
   if (!badge) return;
   if (!users[to].badges) users[to].badges = [];
   users[to].badges.push({ badgeId: bid, from: currentUser, date: new Date().toDateString() });
-  await dbSet(`users/${to}`, { badges: users[to].badges });
-  const histEntry = { type:"badge", to, badgeName: badge.name, badgeEmoji: badge.emoji, from: currentUser, date: new Date().toDateString() };
-  await dbAdd("history", histEntry);
-  history.unshift({ ...histEntry, timestamp: Date.now() });
-  toast(`${badge.emoji} ${badge.name} rozeti ${to}'ya verildi!`);
+  await dbSet("users/" + to, { badges: users[to].badges });
+  const entry = { type:"badge", to: to, badgeName: badge.name, badgeEmoji: badge.emoji, from: currentUser, date: new Date().toDateString() };
+  await dbAdd("history", entry);
+  history.unshift(Object.assign({ timestamp: Date.now() }, entry));
+  toast(badge.emoji + " " + badge.name + " rozeti " + to + "'ya verildi!");
   document.getElementById("giveBadgeTo").value = "";
   document.getElementById("giveBadgeId").value = "";
-}
+});
 
 // ===== BADGES =====
 function renderBadges() {
-  document.getElementById("badgeList").innerHTML = badges.map(b => `
-    <div class="card" style="display:flex;align-items:center;gap:12px;">
-      <div style="font-size:32px;">${b.emoji}</div>
-      <div style="flex:1;">
-        <div style="font-weight:800;font-size:15px;">${b.name}</div>
-        <div style="font-size:13px;color:#aaa;">${b.desc}</div>
-        <div style="font-size:11px;color:#666;">Oluşturan: ${b.createdBy}</div>
-      </div>
-      ${(isAdmin || b.createdBy === currentUser) ? `<button class="btn-gray" onclick="deleteBadge('${b.id}')">Sil</button>` : ""}
-    </div>`).join("");
+  document.getElementById("badgeList").innerHTML = badges.map(function(b) {
+    const canDelete = isAdmin || b.createdBy === currentUser;
+    return '<div class="card" style="display:flex;align-items:center;gap:12px;">' +
+      '<div style="font-size:32px;">' + b.emoji + '</div>' +
+      '<div style="flex:1;">' +
+        '<div style="font-weight:800;font-size:15px;">' + b.name + '</div>' +
+        '<div style="font-size:13px;color:#aaa;">' + b.desc + '</div>' +
+        '<div style="font-size:11px;color:#666;">Oluşturan: ' + b.createdBy + '</div>' +
+      '</div>' +
+      (canDelete ? '<button class="btn-gray deleteBadgeBtn" data-id="' + b.id + '">Sil</button>' : '') +
+      '</div>';
+  }).join("");
+  document.querySelectorAll(".deleteBadgeBtn").forEach(function(btn) {
+    btn.addEventListener("click", async function() {
+      const id = btn.dataset.id;
+      badges = badges.filter(function(b) { return b.id !== id; });
+      await dbSet("badges/" + id, { deleted: true });
+      toast("Rozet silindi!");
+      renderBadges();
+    });
+  });
 }
 
-window.createBadge = async function() {
+document.getElementById("createBadgeBtn").addEventListener("click", async function() {
   const emoji = document.getElementById("badgeEmoji").value || "🏅";
   const name = document.getElementById("badgeName").value.trim();
   const desc = document.getElementById("badgeDesc").value.trim();
   if (!name || !desc) return toast("İsim ve açıklama gir!", "error");
   const id = "b" + Date.now();
-  const newBadge = { id, name, desc, emoji, createdBy: currentUser };
-  await dbSet(`badges/${id}`, newBadge);
+  const newBadge = { id: id, name: name, desc: desc, emoji: emoji, createdBy: currentUser };
+  await dbSet("badges/" + id, newBadge);
   badges.push(newBadge);
   document.getElementById("badgeName").value = "";
   document.getElementById("badgeDesc").value = "";
   document.getElementById("badgeEmoji").value = "🏅";
-  toast(`${emoji} ${name} rozeti oluşturuldu!`);
+  toast(emoji + " " + name + " rozeti oluşturuldu!");
   renderBadges();
-}
-
-window.deleteBadge = async function(id) {
-  // Mark as deleted
-  badges = badges.filter(b => b.id !== id);
-  await dbSet(`badges/${id}`, { deleted: true });
-  toast("Rozet silindi!");
-  renderBadges();
-}
+});
 
 // ===== HISTORY =====
 function renderHistory() {
   if (history.length === 0) {
-    document.getElementById("historyList").innerHTML = `<div style="color:#666;text-align:center;margin-top:40px;">Henüz kayıt yok!</div>`;
+    document.getElementById("historyList").innerHTML = '<div style="color:#666;text-align:center;margin-top:40px;">Henüz kayıt yok!</div>';
     return;
   }
-  document.getElementById("historyList").innerHTML = history.filter(h=>!h.deleted).slice(0,60).map(h => {
+  document.getElementById("historyList").innerHTML = history.filter(function(h) { return !h.deleted; }).slice(0,60).map(function(h) {
     let content = "";
-    if (h.type === "oc") content = `<span style="font-family:'Bangers',cursive;color:#FF4444;font-size:18px;">🎡 Günün OÇ'u:</span> <strong>${h.winner}</strong> 💀`;
-    else if (h.type === "rating") {
-      const today = new Date().toDateString();
-      const scoreLines = Object.entries(h.scores||{}).map(([n,s]) => {
-        const comment = h.comments && h.comments[n] ? `<div style="font-size:12px;color:#aaa;margin-left:12px;margin-top:2px;">💬 "${h.comments[n]}"</div>` : "";
-        return `<div style="font-size:14px;color:#ccc;margin-bottom:6px;">→ <strong>${n}</strong>: <span style="color:${s>=7?"#44BB44":s>=4?"#FFD700":"#FF4444"};font-weight:700;">${s}/10</span>${comment}</div>`;
+    if (h.type === "oc") {
+      content = '<span style="font-family:\'Bangers\',cursive;color:#FF4444;font-size:18px;">🎡 Günün OÇ\'u:</span> <strong>' + h.winner + '</strong> 💀';
+    } else if (h.type === "rating") {
+      const lines = Object.entries(h.scores||{}).map(function(entry) {
+        const n = entry[0], s = entry[1];
+        const sc = s>=7?"#44BB44":s>=4?"#FFD700":"#FF4444";
+        const comment = (h.comments && h.comments[n]) ? '<div style="font-size:12px;color:#aaa;margin-left:12px;margin-top:2px;">💬 "' + h.comments[n] + '"</div>' : "";
+        return '<div style="font-size:14px;color:#ccc;margin-bottom:6px;">→ <strong>' + n + '</strong>: <span style="color:' + sc + ';font-weight:700;">' + s + '/10</span>' + comment + '</div>';
       }).join("");
-      content = `<div style="font-weight:700;margin-bottom:6px;">⭐ Puanlama — <span style="color:#4488FF;">${h.game||"Genel"}</span></div>${scoreLines}`;
+      content = '<div style="font-weight:700;margin-bottom:6px;">⭐ Puanlama — <span style="color:#4488FF;">' + (h.game||"Genel") + '</span></div>' + lines;
+    } else if (h.type === "badge") {
+      content = '<span style="font-size:20px;">' + h.badgeEmoji + '</span> <strong>' + h.to + '</strong> <span style="color:#FFD700;">"' + h.badgeName + '"</span> rozeti aldı!';
     }
-    else if (h.type === "badge") content = `<span style="font-size:20px;">${h.badgeEmoji}</span> <strong>${h.to}</strong> <span style="color:#FFD700;">"${h.badgeName}"</span> rozeti aldı!`;
     const border = h.type==="oc"?"#FF4444":h.type==="badge"?"#FFD700":"#4488FF";
-    return `<div class="card" style="border-left:3px solid ${border};">
-      <div style="font-size:12px;color:#666;margin-bottom:4px;">${h.date||""}</div>
-      ${content}
-    </div>`;
+    return '<div class="card" style="border-left:3px solid ' + border + ';">' +
+      '<div style="font-size:12px;color:#666;margin-bottom:4px;">' + (h.date||"") + '</div>' +
+      content + '</div>';
   }).join("");
 }
 
 // ===== ADMIN =====
 function renderAdmin() {
-  document.getElementById("userList").innerHTML = Object.entries(users).map(([username, data]) => `
-    <div class="user-row">
-      <div>
-        <span style="font-weight:700;">${username}</span>
-        ${data.isAdmin ? `<span style="background:#333;border-radius:10px;padding:2px 8px;font-size:11px;margin-left:8px;color:#FFD700;">👑 Admin</span>` : ""}
-        <div style="font-size:12px;color:#aaa;margin-top:2px;">Şifre: <code style="background:#2a2a3a;padding:2px 6px;border-radius:4px;">${data.password}</code></div>
-      </div>
-      ${!data.isAdmin ? `<button class="btn-gray" onclick="deleteUser('${username}')">Sil</button>` : ""}
-    </div>`).join("");
+  document.getElementById("userList").innerHTML = Object.entries(users).map(function(entry) {
+    const username = entry[0], data = entry[1];
+    return '<div class="user-row">' +
+      '<div>' +
+        '<span style="font-weight:700;">' + username + '</span>' +
+        (data.isAdmin ? '<span style="background:#333;border-radius:10px;padding:2px 8px;font-size:11px;margin-left:8px;color:#FFD700;">👑 Admin</span>' : '') +
+        '<div style="font-size:12px;color:#aaa;margin-top:2px;">Şifre: <code style="background:#2a2a3a;padding:2px 6px;border-radius:4px;">' + data.password + '</code></div>' +
+      '</div>' +
+      (!data.isAdmin ? '<button class="btn-gray deleteUserBtn" data-username="' + username + '">Sil</button>' : '') +
+      '</div>';
+  }).join("");
+  document.querySelectorAll(".deleteUserBtn").forEach(function(btn) {
+    btn.addEventListener("click", async function() {
+      const username = btn.dataset.username;
+      if (username === ADMIN) return toast("Adminı silemezsin!", "error");
+      delete users[username];
+      await dbSet("users/" + username, { deleted: true });
+      toast(username + " silindi!");
+      renderAdmin();
+    });
+  });
 }
 
-window.handleRegister = async function() {
+document.getElementById("registerBtn").addEventListener("click", async function() {
   const u = document.getElementById("regUser").value.trim();
   const p = document.getElementById("regPass").value;
   if (!u || !p) return toast("Boş bırakma!", "error");
   if (users[u]) return toast("Bu kullanıcı zaten var!", "error");
   users[u] = { password: p, isAdmin: false, badges: [], totalScore: 0 };
-  await dbSet(`users/${u}`, users[u]);
+  await dbSet("users/" + u, users[u]);
   document.getElementById("regUser").value = "";
   document.getElementById("regPass").value = "";
-  toast(`${u} eklendi! ✅`);
+  toast(u + " eklendi! ✅");
   renderAdmin();
-}
-
-window.deleteUser = async function(username) {
-  if (username === ADMIN) return toast("Adminı silemezsin!", "error");
-  delete users[username];
-  await dbSet(`users/${username}`, { deleted: true });
-  toast(`${username} silindi!`);
-  renderAdmin();
-}
+});
 
 init();
 </script>
