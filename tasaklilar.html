@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <title>Ağır Taşaklılar Kulübü 👑</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Nunito:wght@400;700;800&display=swap" rel="stylesheet" />
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #0a0a0f; color: #f0f0f0; font-family: 'Nunito', sans-serif; min-height: 100vh; padding-bottom: 80px; }
+    .header { background: linear-gradient(135deg,#1a0a0a,#0a0a1a); border-bottom: 2px solid #FF4444; padding: 14px 20px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+    .htitle { font-family: 'Bangers', cursive; font-size: 20px; letter-spacing: 3px; background: linear-gradient(135deg,#FF4444,#FFD700); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .card { background: #151520; border: 1px solid #333; border-radius: 16px; padding: 20px; margin-bottom: 16px; }
+    .btn { background: linear-gradient(135deg,#FF4444,#cc2222); color: #fff; border: none; border-radius: 10px; padding: 10px 20px; font-family: 'Nunito', sans-serif; font-weight: 700; font-size: 15px; cursor: pointer; width: 100%; margin-top: 8px; }
+    .btn-gold { background: linear-gradient(135deg,#FFD700,#FF8800); color: #111; border: none; border-radius: 10px; padding: 10px 20px; font-family: 'Nunito', sans-serif; font-weight: 700; font-size: 15px; cursor: pointer; width: 100%; margin-top: 8px; }
+    .btn-gray { background: #333; color: #fff; border: none; border-radius: 10px; padding: 8px 14px; font-family: 'Nunito', sans-serif; font-weight: 700; font-size: 13px; cursor: pointer; }
+    input, select { background: #1e1e2e; border: 1px solid #444; border-radius: 10px; padding: 10px 14px; color: #fff; font-size: 15px; width: 100%; font-family: 'Nunito', sans-serif; margin-bottom: 12px; }
+    label { font-size: 13px; color: #aaa; margin-bottom: 4px; display: block; }
+    .stitle { font-family: 'Bangers', cursive; font-size: 24px; letter-spacing: 2px; color: #FF4444; margin-bottom: 16px; margin-top: 8px; }
+    .nav { position: fixed; bottom: 0; left: 0; right: 0; background: #0f0f1a; border-top: 2px solid #333; display: flex; justify-content: space-around; padding: 8px 0; z-index: 200; }
+    .nbtn { background: none; border: none; color: #888; font-size: 10px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 2px; font-family: 'Nunito', sans-serif; font-weight: 700; padding: 4px 8px; }
+    .nbtn.active { color: #FF4444; }
+    .badge-tag { display: inline-flex; align-items: center; gap: 4px; background: #1e1e2e; border: 1px solid #444; border-radius: 20px; padding: 3px 10px; font-size: 11px; margin: 2px; }
+    .page { padding: 16px; display: none; }
+    .page.active { display: block; }
+    .score-btn { width: 36px; height: 36px; border-radius: 8px; border: none; cursor: pointer; background: #2a2a3a; color: #888; font-weight: 700; font-size: 14px; transition: all 0.15s; margin: 2px; }
+  </style>
+</head>
+<body>
+
+<div id="loadingScreen" style="display:flex;align-items:center;justify-content:center;min-height:100vh;flex-direction:column;gap:20px;">
+  <div style="font-family:'Bangers',cursive;font-size:36px;letter-spacing:4px;background:linear-gradient(135deg,#FF4444,#FFD700);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">AĞIR TAŞAKLILAR</div>
+  <div style="color:#888;">Yükleniyor...</div>
+</div>
+
+<div id="loginPage" style="display:none;align-items:center;justify-content:center;min-height:100vh;padding:20px;">
+  <div style="width:100%;max-width:380px;">
+    <div style="text-align:center;margin-bottom:40px;">
+      <div style="font-family:'Bangers',cursive;font-size:42px;letter-spacing:4px;background:linear-gradient(135deg,#FF4444,#FFD700);-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1.1;">AĞIR TAŞAKLILAR</div>
+      <div style="font-family:'Bangers',cursive;font-size:20px;letter-spacing:2px;color:#888;">KULÜBÜ 👑</div>
+    </div>
+    <div class="card">
+      <label>Kullanıcı Adı</label>
+      <input id="loginUser" placeholder="adınızı girin" onkeydown="if(event.key==='Enter')handleLogin()" />
+      <label>Şifre</label>
+      <input id="loginPass" type="password" placeholder="••••••" onkeydown="if(event.key==='Enter')handleLogin()" />
+      <button class="btn" style="font-size:17px;padding:13px;" onclick="handleLogin()">GİRİŞ YAP 🚀</button>
+    </div>
+    <div style="text-align:center;font-size:13px;color:#555;margin-top:12px;">admin / admin123 ile giriş yap</div>
+  </div>
+</div>
+
+<div id="mainApp" style="display:none;">
+  <div class="header">
+    <div class="htitle">AĞIR TAŞAKLILAR 👑</div>
+    <button class="btn-gray" onclick="handleLogout()">Çıkış</button>
+  </div>
+
+  <div id="pageHome" class="page active">
+    <div class="stitle">📊 BUGÜNKÜ PUANLAR</div>
+    <div id="dailyOCCard"></div>
+    <div id="scoreList"></div>
+  </div>
+
+  <div id="pageWheel" class="page">
+    <div class="stitle">🎡 GÜNÜN OÇ'U ÇARKI</div>
+    <div id="wheelOCInfo"></div>
+    <div class="card" style="display:flex;flex-direction:column;align-items:center;gap:16px;">
+      <canvas id="wheelCanvas" width="300" height="300"></canvas>
+      <button id="spinBtn" class="btn" style="width:auto;padding:12px 32px;font-family:'Bangers',cursive;font-size:18px;letter-spacing:2px;" onclick="doSpin()">🎰 ÇEVİR!</button>
+    </div>
+    <div id="wheelResult"></div>
+  </div>
+
+  <div id="pageRate" class="page">
+    <div class="stitle">⭐ PUAN VER</div>
+    <div class="card">
+      <label>Oyun / Mod</label>
+      <select id="gameMode">
+        <option>Genel</option><option>LoL</option><option>Basra</option><option>CS2</option><option>Valorant</option><option>Diğer</option>
+      </select>
+    </div>
+    <div id="rateList"></div>
+    <button class="btn" style="font-size:17px;padding:14px;" onclick="submitRatings()">PUANLARI KAYDET 🎯</button>
+    <div class="stitle" style="margin-top:24px;">🏅 ROZET VER</div>
+    <div class="card">
+      <label>Kişi</label>
+      <select id="giveBadgeTo"></select>
+      <label>Rozet</label>
+      <select id="giveBadgeId"></select>
+      <button class="btn-gold" onclick="giveBadge()">ROZET VER 🏅</button>
+    </div>
+  </div>
+
+  <div id="pageBadges" class="page">
+    <div class="stitle">🏅 ROZETLER</div>
+    <div id="badgeList"></div>
+    <div class="stitle" style="margin-top:24px;">✨ YENİ ROZET OLUŞTUR</div>
+    <div class="card">
+      <label>Emoji</label>
+      <input id="badgeEmoji" value="🏅" maxlength="2" />
+      <label>Rozet İsmi</label>
+      <input id="badgeName" placeholder="BEN ANLADIM ABİ" />
+      <label>Anlamı / Açıklaması</label>
+      <input id="badgeDesc" placeholder="Trip atan bir eşek 🫏" />
+      <button class="btn-gold" onclick="createBadge()">ROZET OLUŞTUR ✨</button>
+    </div>
+  </div>
+
+  <div id="pageHistory" class="page">
+    <div class="stitle">📜 GEÇMİŞ & ANILAR</div>
+    <div id="historyList"></div>
+  </div>
+
+  <div id="pageAdmin" class="page">
+    <div class="stitle">⚙️ ADMİN PANELİ</div>
+    <div class="card" style="border:1px solid #FFD700;">
+      <div style="font-weight:800;margin-bottom:16px;font-size:18px;">👥 Yeni Üye Ekle</div>
+      <label>Kullanıcı Adı</label>
+      <input id="regUser" placeholder="kullanıcıadı" />
+      <label>Şifre</label>
+      <input id="regPass" placeholder="şifre" />
+      <button class="btn-gold" onclick="handleRegister()">EKLE ✅</button>
+    </div>
+    <div class="card">
+      <div style="font-weight:800;margin-bottom:16px;font-size:18px;">🔑 Tüm Üyeler & Şifreler</div>
+      <div id="userList"></div>
+    </div>
+  </div>
+
+  <div class="nav" id="mainNav"></div>
+</div>
+
+<div id="toast" style="position:fixed;bottom:90px;left:50%;transform:translateX(-50%);color:#fff;padding:10px 20px;border-radius:12px;font-size:14px;font-weight:700;z-index:999;white-space:nowrap;box-shadow:0 4px 20px #000;display:none;"></div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+import { getFirestore, doc, getDoc, setDoc, collection, getDocs, addDoc, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDI7iOdq-b0u4H5kB79BNvwx3fUpQkbIVE",
+  authDomain: "agir-tasaklilar.firebaseapp.com",
+  projectId: "agir-tasaklilar",
+  storageBucket: "agir-tasaklilar.firebasestorage.app",
+  messagingSenderId: "231655685433",
+  appId: "1:231655685433:web:c2e0db2d9cb57345f0fce8"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+const ADMIN = "admin";
+let currentUser = null, isAdmin = false;
+let users = {}, badges = [], dailyOC = null, history = [], ratings = {};
+let ratingValues = {}, commentValues = {};
+let wheelRot = 0, spinning = false;
+
+const DEFAULT_BADGES = [
+  { id:"b1", name:"BEN ANLADIM ABİ", desc:"Trip atan bir eşek 🫏", emoji:"🫏", createdBy:"admin" },
+  { id:"b2", name:"FEEDER KRALİÇESİ", desc:"Ölmeyi seviyor çok seviyor 💀", emoji:"💀", createdBy:"admin" },
+  { id:"b3", name:"SES YOK", desc:"Aramada sessiz oturan adam 🔇", emoji:"🔇", createdBy:"admin" },
+  { id:"b4", name:"NERDE BU ADAM", desc:"AFK şampiyon 🏃", emoji:"🏃", createdBy:"admin" },
+  { id:"b5", name:"ELEŞTİRMEN", desc:"Her şeyi biliyor ama hiçbirini yapamıyor 🎙️", emoji:"🎙️", createdBy:"admin" },
+  { id:"b6", name:"TAHTEREVALLI", desc:"Bir iyi bir kötü, tutarsızlık şampiyonu 🎢", emoji:"🎢", createdBy:"admin" },
+];
+
+// ===== DB HELPERS =====
+async function dbGet(path) {
+  const d = await getDoc(doc(db, ...path.split("/")));
+  return d.exists() ? d.data() : null;
+}
+async function dbSet(path, data) {
+  await setDoc(doc(db, ...path.split("/")), data, { merge: true });
+}
+async function dbGetCol(col) {
+  const snap = await getDocs(collection(db, col));
+  return snap.docs.map(d => ({ id: d.id, ...d.data() }));
+}
+async function dbAdd(col, data) {
+  return await addDoc(collection(db, col), { ...data, timestamp: Date.now() });
+}
+
+// ===== INIT =====
+async function init() {
+  try {
+    // Load or create admin
+    let adminData = await dbGet("users/admin");
+    if (!adminData) {
+      adminData = { password: "admin123", isAdmin: true, badges: [], totalScore: 0 };
+      await dbSet("users/admin", adminData);
+    }
+    // Load users
+    const userDocs = await dbGetCol("users");
+    users = {};
+    userDocs.forEach(u => { const { id, ...rest } = u; users[id] = rest; });
+    // Load badges
+    const badgeDocs = await dbGetCol("badges");
+    if (badgeDocs.length === 0) {
+      for (const b of DEFAULT_BADGES) await dbSet(`badges/${b.id}`, b);
+      badges = [...DEFAULT_BADGES];
+    } else {
+      badges = badgeDocs.map(({ id, ...rest }) => ({ id, ...rest }));
+    }
+    // Load dailyOC
+    dailyOC = await dbGet("meta/dailyOC");
+    // Load ratings
+    const ratingDocs = await dbGetCol("ratings");
+    ratings = {};
+    ratingDocs.forEach(r => { const { id, ...rest } = r; ratings[id] = rest; });
+    // Load history
+    const histDocs = await dbGetCol("history");
+    history = histDocs.sort((a,b) => (b.timestamp||0)-(a.timestamp||0));
+
+    document.getElementById("loadingScreen").style.display = "none";
+    document.getElementById("loginPage").style.display = "flex";
+  } catch(e) {
+    console.error(e);
+    document.getElementById("loadingScreen").innerHTML = '<div style="color:#FF4444;padding:20px;text-align:center;">Bağlantı hatası! Sayfayı yenile.</div>';
+  }
+}
+
+// ===== AUTH =====
+window.handleLogin = async function() {
+  const u = document.getElementById("loginUser").value.trim();
+  const p = document.getElementById("loginPass").value;
+  if (!u || !p) return toast("Kullanıcı adı ve şifre gir!", "error");
+  if (!users[u]) return toast("Kullanıcı bulunamadı!", "error");
+  if (users[u].password !== p) return toast("Yanlış şifre!", "error");
+  currentUser = u;
+  isAdmin = !!users[u].isAdmin;
+  document.getElementById("loginPage").style.display = "none";
+  document.getElementById("mainApp").style.display = "block";
+  buildNav();
+  showPage("home");
+  toast(`Hoş geldin ${u}! 👊`);
+}
+
+window.handleLogout = function() {
+  currentUser = null; isAdmin = false;
+  document.getElementById("mainApp").style.display = "none";
+  document.getElementById("loginPage").style.display = "flex";
+  document.getElementById("loginUser").value = "";
+  document.getElementById("loginPass").value = "";
+}
+
+// ===== TOAST =====
+function toast(msg, type="success") {
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.style.background = type === "error" ? "#cc2222" : "#226622";
+  t.style.display = "block";
+  setTimeout(() => t.style.display = "none", 3000);
+}
+
+// ===== NAV =====
+function buildNav() {
+  const pages = [
+    { id:"home", label:"Ana Sayfa", icon:"🏠" },
+    { id:"wheel", label:"Çark", icon:"🎡" },
+    { id:"rate", label:"Puan Ver", icon:"⭐" },
+    { id:"badges", label:"Rozetler", icon:"🏅" },
+    { id:"history", label:"Geçmiş", icon:"📜" },
+    ...(isAdmin ? [{ id:"admin", label:"Admin", icon:"⚙️" }] : []),
+  ];
+  document.getElementById("mainNav").innerHTML = pages.map(p =>
+    `<button class="nbtn" id="nav-${p.id}" onclick="showPage('${p.id}')"><span style="font-size:22px;">${p.icon}</span>${p.label}</button>`
+  ).join("");
+}
+
+window.showPage = function(id) {
+  document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+  document.querySelectorAll(".nbtn").forEach(b => b.classList.remove("active"));
+  document.getElementById("page" + id.charAt(0).toUpperCase() + id.slice(1)).classList.add("active");
+  const nb = document.getElementById("nav-" + id);
+  if (nb) nb.classList.add("active");
+  if (id === "home") renderHome();
+  if (id === "wheel") renderWheel();
+  if (id === "rate") renderRate();
+  if (id === "badges") renderBadges();
+  if (id === "history") renderHistory();
+  if (id === "admin") renderAdmin();
+}
+
+// ===== HOME =====
+function renderHome() {
+  const today = new Date().toDateString();
+  // OC Card
+  let ocHtml = "";
+  if (dailyOC && dailyOC.date === today) {
+    ocHtml = `<div class="card" style="border:2px solid #FF4444;text-align:center;margin-bottom:16px;">
+      <div style="font-size:13px;color:#aaa;">🎡 Günün OÇ'u</div>
+      <div style="font-family:'Bangers',cursive;font-size:32px;color:#FF4444;letter-spacing:2px;">${dailyOC.username} 💀</div>
+      <div style="font-size:12px;color:#666;">${dailyOC.date}</div>
+    </div>`;
+  }
+  document.getElementById("dailyOCCard").innerHTML = ocHtml;
+
+  // Scores
+  const members = Object.keys(users).filter(u => u !== ADMIN);
+  const scores = members.map(m => {
+    const key = `${today}_${m}`;
+    const dayR = ratings[key] ? ratings[key].votes || [] : [];
+    const avg = dayR.length > 0 ? (dayR.reduce((s,r) => s+r.score, 0) / dayR.length).toFixed(1) : "-";
+    return { username: m, avg, count: dayR.length, total: users[m]?.totalScore || 0, badges: users[m]?.badges || [] };
+  }).sort((a,b) => parseFloat(b.avg||0) - parseFloat(a.avg||0));
+
+  const colors = ["#FFD700","#aaa","#cd7f32"];
+  document.getElementById("scoreList").innerHTML = scores.map((m,i) => {
+    const myBadges = m.badges.slice(-3).map(bid => {
+      const b = badges.find(x => x.id === bid.badgeId);
+      return b ? `<span class="badge-tag">${b.emoji} ${b.name}</span>` : "";
+    }).join("");
+    const avgColor = parseFloat(m.avg)>=7?"#44BB44":parseFloat(m.avg)>=4?"#FFD700":"#FF4444";
+    return `<div class="card" style="display:flex;align-items:center;gap:12px;padding:14px 16px;">
+      <div style="font-family:'Bangers',cursive;font-size:28px;color:${colors[i]||'#555'};min-width:32px;">${i+1}</div>
+      <div style="flex:1;">
+        <div style="font-weight:800;font-size:16px;">${m.username}</div>
+        <div style="font-size:12px;color:#888;">Toplam: ${m.total} puan</div>
+        ${myBadges ? `<div style="margin-top:4px;">${myBadges}</div>` : ""}
+      </div>
+      <div style="text-align:center;">
+        <div style="font-family:'Bangers',cursive;font-size:28px;color:${avgColor};">${m.avg}</div>
+        <div style="font-size:11px;color:#666;">${m.count} oy</div>
+      </div>
+    </div>`;
+  }).join("") || `<div class="card" style="color:#666;text-align:center;">Henüz üye yok. Admin panelinden ekle!</div>`;
+}
+
+// ===== WHEEL =====
+const COLORS = ["#FF4444","#FF8800","#FFD700","#44BB44","#4488FF","#AA44FF","#FF44AA","#00CCCC"];
+function drawWheel(rot) {
+  const canvas = document.getElementById("wheelCanvas");
+  if (!canvas) return;
+  const ctx = canvas.getContext("2d");
+  const members = Object.keys(users).filter(u => u !== ADMIN);
+  const cx = 150, cy = 150, r = 140;
+  ctx.clearRect(0,0,300,300);
+  if (members.length < 2) {
+    ctx.fillStyle = "#333"; ctx.fillRect(0,0,300,300);
+    ctx.fillStyle = "#888"; ctx.font = "16px Nunito"; ctx.textAlign = "center";
+    ctx.fillText("Üye ekle!", cx, cy);
+    return;
+  }
+  const slice = (2*Math.PI) / members.length;
+  members.forEach((m,i) => {
+    const start = rot + i*slice, end = start + slice;
+    ctx.beginPath(); ctx.moveTo(cx,cy); ctx.arc(cx,cy,r,start,end);
+    ctx.fillStyle = COLORS[i%COLORS.length]; ctx.fill();
+    ctx.strokeStyle = "#111"; ctx.lineWidth = 2; ctx.stroke();
+    ctx.save(); ctx.translate(cx,cy); ctx.rotate(start+slice/2);
+    ctx.textAlign = "right"; ctx.fillStyle = "#fff";
+    ctx.font = "bold 14px Bangers, cursive";
+    ctx.shadowColor = "#000"; ctx.shadowBlur = 4;
+    ctx.fillText(m, r-12, 5); ctx.restore();
+  });
+  ctx.beginPath(); ctx.arc(cx,cy,18,0,2*Math.PI);
+  ctx.fillStyle = "#111"; ctx.fill();
+  ctx.strokeStyle = "#FFD700"; ctx.lineWidth = 3; ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(295,cy-12); ctx.lineTo(295,cy+12); ctx.lineTo(270,cy);
+  ctx.closePath(); ctx.fillStyle = "#FFD700"; ctx.fill();
+  ctx.strokeStyle = "#111"; ctx.lineWidth = 2; ctx.stroke();
+}
+
+function renderWheel() {
+  drawWheel(wheelRot);
+  const today = new Date().toDateString();
+  let info = "";
+  if (dailyOC && dailyOC.date === today) {
+    info = `<div class="card" style="border:1px solid #FF4444;text-align:center;margin-bottom:16px;">
+      <div style="font-size:13px;color:#aaa;">Bugünün OÇ'u zaten seçildi:</div>
+      <div style="font-family:'Bangers',cursive;font-size:28px;color:#FF4444;">${dailyOC.username} 💀</div>
+    </div>`;
+  }
+  document.getElementById("wheelOCInfo").innerHTML = info;
+}
+
+window.doSpin = async function() {
+  if (spinning) return;
+  const members = Object.keys(users).filter(u => u !== ADMIN);
+  if (members.length < 2) return toast("En az 2 üye gerekli!", "error");
+  spinning = true;
+  document.getElementById("spinBtn").disabled = true;
+  document.getElementById("spinBtn").textContent = "DÖNÜYOR...";
+
+  const totalRot = (5 + Math.random()*5)*2*Math.PI + Math.random()*2*Math.PI;
+  const duration = 4000, start = performance.now(), startRot = wheelRot;
+
+  function animate(now) {
+    const elapsed = now - start, progress = Math.min(elapsed/duration, 1);
+    const ease = 1 - Math.pow(1-progress, 4);
+    wheelRot = startRot + totalRot*ease;
+    drawWheel(wheelRot);
+    if (progress < 1) { requestAnimationFrame(animate); return; }
+
+    spinning = false;
+    document.getElementById("spinBtn").disabled = false;
+    document.getElementById("spinBtn").textContent = "🎰 ÇEVİR!";
+
+    const finalRot = wheelRot % (2*Math.PI);
+    const slice = (2*Math.PI)/members.length;
+    const norm = (2*Math.PI - finalRot%(2*Math.PI))%(2*Math.PI);
+    const idx = Math.floor(norm/slice) % members.length;
+    const winner = members[idx];
+
+    const today = new Date().toDateString();
+    dailyOC = { username: winner, date: today };
+    dbSet("meta/dailyOC", dailyOC);
+    dbAdd("history", { type:"oc", winner, date: today });
+    history.unshift({ type:"oc", winner, date: today, timestamp: Date.now() });
+
+    document.getElementById("wheelResult").innerHTML = `
+      <div class="card" style="border:2px solid #FFD700;text-align:center;margin-top:16px;">
+        <div style="font-family:'Bangers',cursive;font-size:36px;color:#FFD700;">💀 ${winner} 💀</div>
+        <div style="color:#aaa;">Günün OÇ'u seçildi!</div>
+      </div>`;
+    toast(`🎉 Günün OÇ'u: ${winner}!`);
+    renderWheel();
+  }
+  requestAnimationFrame(animate);
+}
+
+// ===== RATE =====
+function renderRate() {
+  const members = Object.keys(users).filter(u => u !== ADMIN && u !== currentUser);
+  ratingValues = {}; commentValues = {};
+  document.getElementById("rateList").innerHTML = members.map(m => `
+    <div class="card">
+      <div style="font-weight:800;font-size:17px;margin-bottom:12px;">${m}</div>
+      <div style="display:flex;flex-wrap:wrap;margin-bottom:10px;">
+        ${[1,2,3,4,5,6,7,8,9,10].map(n =>
+          `<button class="score-btn" id="sb_${m}_${n}" onclick="setScore('${m}',${n})">${n}</button>`
+        ).join("")}
+      </div>
+      <input placeholder="Yorum (isteğe bağlı, anonim)" onchange="commentValues['${m}']=this.value" style="margin-bottom:0;" />
+    </div>`).join("") || `<div class="card" style="color:#666;text-align:center;">Puanlayacak üye yok!</div>`;
+
+  // Badge selects
+  const toSel = document.getElementById("giveBadgeTo");
+  const bSel = document.getElementById("giveBadgeId");
+  toSel.innerHTML = `<option value="">-- Seç --</option>` + members.map(m => `<option>${m}</option>`).join("");
+  bSel.innerHTML = `<option value="">-- Seç --</option>` + badges.map(b => `<option value="${b.id}">${b.emoji} ${b.name}</option>`).join("");
+}
+
+window.setScore = function(member, n) {
+  ratingValues[member] = n;
+  [1,2,3,4,5,6,7,8,9,10].forEach(i => {
+    const btn = document.getElementById(`sb_${member}_${i}`);
+    if (!btn) return;
+    btn.style.background = i===n ? (n>=7?"#44BB44":n>=4?"#FFD700":"#FF4444") : "#2a2a3a";
+    btn.style.color = i===n ? (n>=4&&n<7?"#111":"#fff") : "#888";
+  });
+}
+
+window.submitRatings = async function() {
+  const members = Object.keys(users).filter(u => u !== ADMIN && u !== currentUser);
+  if (members.some(m => !ratingValues[m])) return toast("Herkese puan ver!", "error");
+  const today = new Date().toDateString();
+  const game = document.getElementById("gameMode").value;
+
+  for (const m of members) {
+    const score = ratingValues[m];
+    const key = `${today}_${m}`;
+    if (!ratings[key]) ratings[key] = { votes: [] };
+    if (!ratings[key].votes) ratings[key].votes = [];
+    ratings[key].votes.push({ from: currentUser, score, game });
+    await dbSet(`ratings/${key}`, ratings[key]);
+    users[m].totalScore = (users[m].totalScore||0) + score;
+    await dbSet(`users/${m}`, { totalScore: users[m].totalScore });
+  }
+
+  const histEntry = { type:"rating", from: currentUser, date: today, game, scores: Object.fromEntries(members.map(m=>[m,ratingValues[m]])) };
+  await dbAdd("history", histEntry);
+  history.unshift({ ...histEntry, timestamp: Date.now() });
+
+  toast("Puanlar kaydedildi! 🎯");
+  renderRate();
+}
+
+window.giveBadge = async function() {
+  const to = document.getElementById("giveBadgeTo").value;
+  const bid = document.getElementById("giveBadgeId").value;
+  if (!to || !bid) return toast("Kişi ve rozet seç!", "error");
+  const badge = badges.find(b => b.id === bid);
+  if (!badge) return;
+  if (!users[to].badges) users[to].badges = [];
+  users[to].badges.push({ badgeId: bid, from: currentUser, date: new Date().toDateString() });
+  await dbSet(`users/${to}`, { badges: users[to].badges });
+  const histEntry = { type:"badge", to, badgeName: badge.name, badgeEmoji: badge.emoji, from: currentUser, date: new Date().toDateString() };
+  await dbAdd("history", histEntry);
+  history.unshift({ ...histEntry, timestamp: Date.now() });
+  toast(`${badge.emoji} ${badge.name} rozeti ${to}'ya verildi!`);
+  document.getElementById("giveBadgeTo").value = "";
+  document.getElementById("giveBadgeId").value = "";
+}
+
+// ===== BADGES =====
+function renderBadges() {
+  document.getElementById("badgeList").innerHTML = badges.map(b => `
+    <div class="card" style="display:flex;align-items:center;gap:12px;">
+      <div style="font-size:32px;">${b.emoji}</div>
+      <div style="flex:1;">
+        <div style="font-weight:800;font-size:15px;">${b.name}</div>
+        <div style="font-size:13px;color:#aaa;">${b.desc}</div>
+        <div style="font-size:11px;color:#666;">Oluşturan: ${b.createdBy}</div>
+      </div>
+      ${(isAdmin || b.createdBy === currentUser) ? `<button class="btn-gray" onclick="deleteBadge('${b.id}')">Sil</button>` : ""}
+    </div>`).join("");
+}
+
+window.createBadge = async function() {
+  const emoji = document.getElementById("badgeEmoji").value || "🏅";
+  const name = document.getElementById("badgeName").value.trim();
+  const desc = document.getElementById("badgeDesc").value.trim();
+  if (!name || !desc) return toast("İsim ve açıklama gir!", "error");
+  const id = "b" + Date.now();
+  const newBadge = { id, name, desc, emoji, createdBy: currentUser };
+  await dbSet(`badges/${id}`, newBadge);
+  badges.push(newBadge);
+  document.getElementById("badgeName").value = "";
+  document.getElementById("badgeDesc").value = "";
+  document.getElementById("badgeEmoji").value = "🏅";
+  toast(`${emoji} ${name} rozeti oluşturuldu!`);
+  renderBadges();
+}
+
+window.deleteBadge = async function(id) {
+  // Mark as deleted
+  badges = badges.filter(b => b.id !== id);
+  await dbSet(`badges/${id}`, { deleted: true });
+  toast("Rozet silindi!");
+  renderBadges();
+}
+
+// ===== HISTORY =====
+function renderHistory() {
+  if (history.length === 0) {
+    document.getElementById("historyList").innerHTML = `<div style="color:#666;text-align:center;margin-top:40px;">Henüz kayıt yok!</div>`;
+    return;
+  }
+  document.getElementById("historyList").innerHTML = history.filter(h=>!h.deleted).slice(0,60).map(h => {
+    let content = "";
+    if (h.type === "oc") content = `<span style="font-family:'Bangers',cursive;color:#FF4444;font-size:18px;">🎡 Günün OÇ'u:</span> <strong>${h.winner}</strong> 💀`;
+    else if (h.type === "rating") {
+      const scoreLines = Object.entries(h.scores||{}).map(([n,s]) =>
+        `<div style="font-size:14px;color:#ccc;">→ <strong>${n}</strong>: <span style="color:${s>=7?"#44BB44":s>=4?"#FFD700":"#FF4444"};font-weight:700;">${s}/10</span></div>`
+      ).join("");
+      content = `<div style="font-weight:700;margin-bottom:6px;">⭐ Puanlama — <span style="color:#4488FF;">${h.game||"Genel"}</span></div>${scoreLines}`;
+    }
+    else if (h.type === "badge") content = `<span style="font-size:20px;">${h.badgeEmoji}</span> <strong>${h.to}</strong> <span style="color:#FFD700;">"${h.badgeName}"</span> rozeti aldı!`;
+    const border = h.type==="oc"?"#FF4444":h.type==="badge"?"#FFD700":"#4488FF";
+    return `<div class="card" style="border-left:3px solid ${border};">
+      <div style="font-size:12px;color:#666;margin-bottom:4px;">${h.date||""}</div>
+      ${content}
+    </div>`;
+  }).join("");
+}
+
+// ===== ADMIN =====
+function renderAdmin() {
+  document.getElementById("userList").innerHTML = Object.entries(users).map(([username, data]) => `
+    <div class="user-row">
+      <div>
+        <span style="font-weight:700;">${username}</span>
+        ${data.isAdmin ? `<span style="background:#333;border-radius:10px;padding:2px 8px;font-size:11px;margin-left:8px;color:#FFD700;">👑 Admin</span>` : ""}
+        <div style="font-size:12px;color:#aaa;margin-top:2px;">Şifre: <code style="background:#2a2a3a;padding:2px 6px;border-radius:4px;">${data.password}</code></div>
+      </div>
+      ${!data.isAdmin ? `<button class="btn-gray" onclick="deleteUser('${username}')">Sil</button>` : ""}
+    </div>`).join("");
+}
+
+window.handleRegister = async function() {
+  const u = document.getElementById("regUser").value.trim();
+  const p = document.getElementById("regPass").value;
+  if (!u || !p) return toast("Boş bırakma!", "error");
+  if (users[u]) return toast("Bu kullanıcı zaten var!", "error");
+  users[u] = { password: p, isAdmin: false, badges: [], totalScore: 0 };
+  await dbSet(`users/${u}`, users[u]);
+  document.getElementById("regUser").value = "";
+  document.getElementById("regPass").value = "";
+  toast(`${u} eklendi! ✅`);
+  renderAdmin();
+}
+
+window.deleteUser = async function(username) {
+  if (username === ADMIN) return toast("Adminı silemezsin!", "error");
+  delete users[username];
+  await dbSet(`users/${username}`, { deleted: true });
+  toast(`${username} silindi!`);
+  renderAdmin();
+}
+
+init();
+</script>
+</body>
+</html>
