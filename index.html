@@ -339,7 +339,7 @@ function renderHome() {
     }).join("");
     const avgColor = parseFloat(m.avg)>=7?"#44BB44":parseFloat(m.avg)>=4?"#FFD700":"#FF4444";
     const isMe = m.username === currentUser;
-    return `<div class="card" style="display:flex;align-items:center;gap:12px;padding:14px 16px;${isMe?"border:1px solid #FF4444;":""}" ${isMe?`onclick="showMyComments()"`:""} ${isMe?`style="cursor:pointer;"`:""}>
+    return `<div class="card" style="display:flex;align-items:center;gap:12px;padding:14px 16px;${isMe?"border:1px solid #FF4444;cursor:pointer;":""}" ${isMe?'onclick="showMyComments()"':""}>
       <div style="font-family:'Bangers',cursive;font-size:28px;color:${colors[i]||'#555'};min-width:32px;">${i+1}</div>
       <div style="flex:1;">
         <div style="font-weight:800;font-size:16px;">${m.username} ${isMe?"<span style='font-size:11px;color:#FF4444;'>(sen)</span>":""}</div>
