@@ -156,20 +156,20 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 const sigmaQuotes = [
-  '"İlk kuralımız ceyhunun anasından kimseye bahsetme." — Tyler Durden',
+  '"İlk kuralımız: kimseye anlatmazsın." — Tyler Durden',
   '"Sahip olduğun şeyler götünü ele geçirir." — Tyler Durden',
   '"Sen özel değilsin. Güzel ve eşsiz bir kar tanesi de değilsin." — Tyler Durden',
   '"Kaybedeceğin hiçbir şey yoksa her şeyi kazanabilirsin." — Tyler Durden',
   '"Herkes sigma doğar, sistem beta yapar." — Ağır Taşaklılar',
-  '"Herkese puan ver, Ceyhun sende götten ver." — Kulüp Anayasası',
+  '"Herkese puan ver, kimseyi affetme." — Kulüp Anayasası',
 ];
 const tysonQuotes = [
-  '"Herkeste bir planı vardır, ta ki yarağımı yiyene kadar." — Mike Tyson',
+  '"Herkeste bir planı vardır, ta ki yüzüne yumruk yiyene kadar." — Mike Tyson',
   '"Disiplin, istediğin şeyle ihtiyacın olan şey arasındaki köprüdür." — Mike Tyson',
   '"Aslan olarak geçen bir gün, koyun olarak geçen bin günden iyidir." — Mike Tyson',
-  '"Pembe am gerçek değil, acı gerçek." — Mike Tyson',
+  '"Korku gerçek değil, acı gerçek." — Mike Tyson',
   '"Zirveye ulaşmak kolay, orada kalmak zor." — Mike Tyson',
-  '"Rakibin seni yıkmadan önce sen onu sik." — Mike Tyson',
+  '"Rakibin seni yıkmadan önce sen onu yık." — Mike Tyson',
 ];
 const sq = document.getElementById("sigmaQuote");
 if (sq) sq.textContent = sigmaQuotes[Math.floor(Math.random()*sigmaQuotes.length)];
@@ -533,8 +533,7 @@ window.showMyComments = function() {
   document.body.insertAdjacentHTML("beforeend", html);
 }
 
-
-  const to = document.getElementById("giveBadgeTo").value;
+window.giveBadge = async function() {
   const bid = document.getElementById("giveBadgeId").value;
   if (!to || !bid) return toast("Kişi ve rozet seç!", "error");
   const badge = badges.find(b => b.id === bid);
